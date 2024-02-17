@@ -73,11 +73,11 @@ function createProductsMarkup(images) {
     .map(
       ({ preview, original, description }) => `
 <li class="gallery-item">
-<img
-class="gallery-image"
-src="${preview}"
-data-source="${original}"
-alt="${description}"
+<a class="gallery-link" href="#"><img
+  class="gallery-image"
+  src="${preview}"
+  data-source="${original}"
+  alt="${description}"></a>
 </li>`
     )
     .join("");
@@ -96,17 +96,17 @@ countainer.addEventListener("click", (event) => {
   );
 
   currentTModal = basicLightbox.create(
-      `
+    `
 <div class="modal">
             <img src="${original}" alt="${description}">
         </div>
 `
-    );
-    currentTModal.show();
+  );
+  currentTModal.show();
 });
-document,addEventListener('keyup', ({code}) => {
-  if (code != 'Escape') {
-    return
+document.addEventListener("keyup", ({ code }) => {
+  if (code != "Escape") {
+    return;
   }
-  currentTModal.close()
-})
+  currentTModal.close();
+});
