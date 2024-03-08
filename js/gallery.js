@@ -64,49 +64,57 @@ const images = [
   },
 ];
 
-const countainer = document.querySelector(".gallery");
-countainer.innerHTML = createProductsMarkup(images);
-let currentTModal;
+const container = document.querySelector(".gallery");
+container.innerHTML = createProductsMarkup(images);
+let currentModal;
 
 function createProductsMarkup(images) {
   return images
     .map(
       ({ preview, original, description }) => `
 <li class="gallery-item">
-<a class="gallery-link" href="#"><img
-  class="gallery-image"
-  src="${preview}"
-  data-source="${original}"
-  alt="${description}"></a>
+  <a class="gallery-link" href="${original}">
+    <img
+      class="gallery-image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}">
+  </a>
 </li>`
     )
     .join("");
 }
 
-countainer.addEventListener("click", (event) => {
-  if (event.target === event.currentTarget) {
+container.addEventListener("click", (event) => {
+  event.preventDefault(); // Prevent default anchor behavior
+  if (event.target.tagName !== "IMG") {
     return;
   }
-  const card = event.target.getAttribute("src");
-
-  // const productInfo = images.find(({preview}) => preview === card)
-
   const { original, description } = images.find(
-    ({ preview }) => preview === card
+    ({ preview }) => preview === event.target.dataset.source
   );
 
-  currentTModal = basicLightbox.create(
+  currentModal = basicLightbox.create(
     `
 <div class="modal">
-            <img src="${original}" alt="${description}">
-        </div>
-`
+  <img src="${original}" alt="${description}">
+</div>
+`,
+    {
+      onShow: () => {
+        document.addEventListener("keyup", handleKeyPress);
+      },
+      onClose: () => {
+        document.removeEventListener("keyup", handleKeyPress);
+      },
+    }
   );
-  currentTModal.show();
+  currentModal.show();
 });
-document.addEventListener("keyup", ({ code }) => {
-  if (code != "Escape") {
+
+function handleKeyPress(event) {
+  if (event.code !== "Escape") {
     return;
   }
-  currentTModal.close();
-});
+  currentModal.close();
+}
