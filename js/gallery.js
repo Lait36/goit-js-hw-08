@@ -86,13 +86,12 @@ function createProductsMarkup(images) {
 }
 
 container.addEventListener("click", (event) => {
-  event.preventDefault(); // Prevent default anchor behavior
+  event.preventDefault(); // Запобігти поведінці якоря за замовчуванням
   if (event.target.tagName !== "IMG") {
     return;
   }
-  const { original, description } = images.find(
-    ({ preview }) => preview === event.target.dataset.source
-  );
+  const original = event.target.dataset.source;
+  const description = event.target.alt;
 
   currentModal = basicLightbox.create(
     `
